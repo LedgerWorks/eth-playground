@@ -83,7 +83,8 @@ export const sendAvax = async (amount, to, options: SendAvaxOptions) => {
   await (await client.HTTPSProvider.sendTransaction(signedTx)).wait();
 
   console.log(
-    `View transaction with nonce ${nonce}: https://testnet.snowtrace.io/tx/${txHash}`
+    `View transaction with nonce ${nonce} - Fuji Testnet: https://testnet.snowtrace.io/tx/${txHash}`,
+    `or Mainnet: https://snowtrace.io//tx/${txHash}`
   );
 };
 

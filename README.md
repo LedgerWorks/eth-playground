@@ -42,3 +42,9 @@ npm run play send-avax 0.01 "0x496678ceb28597228e1edaf73950e7b0d8d7343a" --maxFe
 ```
 
 Upon success, that command will output the txHash and url to view the transaction.
+
+#### Get AVAX transaction
+
+```
+npm run play get-avax-tx "0x85f84b0be841d77b2d3108d6e8b9d75e97f23acc0cb729b7377980cccbdf8d28"
+```

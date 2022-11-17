@@ -1,3 +1,4 @@
+import getAvaxTx from "./get-avax-tx";
 import sendAvax from "./send-avax";
 
-export default [sendAvax];
+export default [sendAvax, getAvaxTx];
