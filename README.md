@@ -1,6 +1,6 @@
-# Avalanche Playground
+# Eth Playground
 
-Provides an (incomplete) CLI interface for avalanche C Chain
+Provides an (incomplete) CLI interface for ethereum (eth) provider chains
 
 ## Setup
 
@@ -27,12 +27,16 @@ npm run play -- --help
 npm run play <subcommand> -- --help
 ```
 
-### Send AVAX to an address
+### Avalanche
+
+Example commands for interacting with eth on Avalanche C-Chain.
+
+#### Send AVAX to another address
 
 ```
 npm run play send-avax 0.01 "0x496678ceb28597228e1edaf73950e7b0d8d7343a"
 
- OR pass optional values
+ OR use optional values
 
 npm run play send-avax 0.01 "0x496678ceb28597228e1edaf73950e7b0d8d7343a" --maxFeePerGas=250000000 --maxPriorityFeePerGas=0 --nonce=7
 ```
