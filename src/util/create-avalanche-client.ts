@@ -5,55 +5,51 @@ import { EVMAPI } from "avalanche/dist/apis/evm";
 import { JsonRpcProvider } from "@ethersproject/providers";
 
 type Env = {
-  NETWORK_STACK: string;
+  RPC_HOST: string;
   PRIVATE_KEY: string;
 };
 
-type Client = {
+export type AvalancheClient = {
   wallet: Wallet;
-  address: string;
-  cchainApi: EVMAPI;
-  rpcProvider: JsonRpcProvider;
+  cchain: EVMAPI;
+  HTTPSProvider: JsonRpcProvider;
 };
+
+export const chainId = 43113;
 
 function loadEnv(): void {
   dotenv.config();
 
-  const missingEnvVars = ["PRIVATE_KEY"]
+  const missingEnvVars = ["PRIVATE_KEY", "RPC_HOST"]
     .filter((s) => !process.env[s])
     .join(", ");
 
   if (missingEnvVars) {
     throw new Error(
-      `No ${missingEnvVars} configured on the environment. Create a .env file. See ./env-example.`
+      `No ${missingEnvVars} configured on the Avalanche environment. Create a .env file. See ./env-example.`
     );
   }
 }
 
 loadEnv();
 
-export default (): Client => {
+export default (): AvalancheClient => {
   try {
-    const { PRIVATE_KEY, NETWORK_STACK } = process.env as Env;
+    const { PRIVATE_KEY, RPC_HOST } = process.env as Env;
 
     // For sending a signed transaction to the network
-    const nodeURL = NETWORK_STACK;
-    const HTTPSProvider = new ethers.providers.JsonRpcProvider(nodeURL);
+    const HTTPSProvider = new ethers.providers.JsonRpcProvider(
+      `https://${RPC_HOST}/ext/bc/C/rpc`
+    );
 
     // For estimating max fee and priority fee using CChain APIs
-    const chainId = 43113;
-    const avalanche = new Avalanche(
-      "api.avax-test.network",
-      undefined,
-      "https",
-      chainId
-    );
-    const cchainApi = avalanche.CChain();
+    const avalanche = new Avalanche(RPC_HOST, undefined, "https", chainId);
+    const cchain = avalanche.CChain();
 
     // For signing an unsigned transaction
     const wallet = new ethers.Wallet(PRIVATE_KEY);
-    const address = wallet.address;
-    return { cchainApi, wallet, address, rpcProvider: HTTPSProvider };
+
+    return { cchain, wallet, HTTPSProvider };
   } catch (error) {
     console.error("Client creation failed", error);
     throw error;

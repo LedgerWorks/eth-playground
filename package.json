@@ -1,5 +1,5 @@
 {
-  "name": "avalanche-playground",
+  "name": "eth-playground",
   "version": "1.0.0",
   "description": "",
   "main": "src/program.ts",

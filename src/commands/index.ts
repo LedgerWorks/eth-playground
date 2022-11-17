@@ -1,3 +1,3 @@
-import sendAvax from "./avax";
+import sendAvax from "./send-avax";
 
 export default [sendAvax];
