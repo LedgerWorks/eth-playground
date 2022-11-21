@@ -7,12 +7,12 @@ export const createAvaxAddress = async () => {
   const client = createAvalancheClient();
   const keypair = client.cchain.keyChain().makeKey();
 
-  const privateKeyString = keypair.getPrivateKeyString(); //returns a CB58 encoded string
-  console.log("Private Key: ", privateKeyString);
+  const privateKeyString = keypair.getPrivateKey();
+  console.log("Private Key (C-Chain): ", privateKeyString.toString("hex"));
 
-  const publicKeyBuffer = keypair.getPublicKey(); // returns a CB58 buffer
+  const publicKeyBuffer = keypair.getPublicKey();
   const publicKeyString = ethers.utils.computeAddress(publicKeyBuffer);
-  console.log("C-Chain Public Key: ", publicKeyString);
+  console.log("Public Key (C-Chain): ", publicKeyString);
 };
 
 const register = (): void => {
