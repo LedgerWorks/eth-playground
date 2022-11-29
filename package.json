@@ -9,6 +9,7 @@
     "hardhat:node": "hardhat node",
     "hardhat:compile": "hardhat compile",
     "hardhat:deploy": "hardhat run --network ${NETWORK:-hardhat} src/contracts/deploy.ts",
+    "hardhat:console": "hardhat console --network ${NETWORK:-hardhat}",
     "play": "node -r esbuild-runner/register src/program.ts"
   },
   "author": "",
