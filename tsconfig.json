@@ -1,14 +1,10 @@
 {
   "compilerOptions": {
-    "lib": ["ES2018", "DOM"],
-    "typeRoots": ["./node_modules/@types", "./types"],
-    "module": "CommonJS",
-    "moduleResolution": "node",
+    "target": "es2020",
+    "module": "commonjs",
+    "esModuleInterop": true,
+    "forceConsistentCasingInFileNames": true,
     "strict": true,
-    "target": "ES2018",
-    "sourceMap": true,
-    "esModuleInterop": true
-  },
-  "include": ["**/*.ts"],
-  "exclude": ["node_modules", "build", "cache", "artifacts"]
+    "skipLibCheck": true
+  }
 }
