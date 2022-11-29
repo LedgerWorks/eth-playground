@@ -67,3 +67,5 @@ To deploy a new contract, take the following steps:
 2. Run the deploy script via `npm`.
    - To deploy to the local hardhat network, run `npm run hardhat:deploy`
    - To deploy to another network, set the `NETWORK` environment variable before running: `NETWORK=<network_name> npm run hardhat:deploy`. E.g, to deploy to Fuji, run `NETWORK=fuji npm run hardhat:deploy`
+
+You can set your private key to use when deploying using the `PRIVATE_KEY` environment variable
