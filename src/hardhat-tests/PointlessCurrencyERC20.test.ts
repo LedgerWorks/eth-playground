@@ -1,5 +1,5 @@
-import { time, loadFixture } from "@nomicfoundation/hardhat-network-helpers";
-import { anyValue } from "@nomicfoundation/hardhat-chai-matchers/withArgs";
+import "@nomicfoundation/hardhat-chai-matchers";
+import { loadFixture } from "@nomicfoundation/hardhat-network-helpers";
 import { expect } from "chai";
 import { ethers } from "hardhat";
 import { BigNumber } from "ethers";
@@ -18,8 +18,8 @@ describe("PointlessCurrencyERC20", () => {
     return { contract, initialSupply, owner, otherAccount };
   }
 
-  describe("Deployment", function () {
-    it("Should set the right initial supply", async function () {
+  describe("deployment", function () {
+    it("should set the right initial supply", async () => {
       const { contract, initialSupply, owner } = await loadFixture(
         deployPointlessCurrency
       );
@@ -29,67 +29,28 @@ describe("PointlessCurrencyERC20", () => {
     });
   });
 
-  // describe("Transfer", function () {
-  //   describe("Validations", function () {
-  //     it("Should revert with the right error if called too soon", async function () {
-  //       const { lock } = await loadFixture(deployPointlessCurrency);
+  describe("transfer", () => {
+    it("should emit an event on transfers", async () => {
+      const { contract, owner, otherAccount } = await loadFixture(
+        deployPointlessCurrency
+      );
 
-  //       await expect(lock.withdraw()).to.be.revertedWith(
-  //         "You can't withdraw yet"
-  //       );
-  //     });
+      await expect(contract.transfer(otherAccount.address, 10))
+        .to.emit(contract, "Transfer")
+        .withArgs(owner.address, otherAccount.address, 10);
+    });
 
-  //     it("Should revert with the right error if called from another account", async function () {
-  //       const { lock, unlockTime, otherAccount } = await loadFixture(
-  //         deployPointlessCurrency
-  //       );
+    it("should move balance from sender to recipient", async () => {
+      const { contract, owner, otherAccount, initialSupply } =
+        await loadFixture(deployPointlessCurrency);
 
-  //       // We can increase the time in Hardhat Network
-  //       await time.increaseTo(unlockTime);
-
-  //       // We use lock.connect() to send a transaction from another account
-  //       await expect(lock.connect(otherAccount).withdraw()).to.be.revertedWith(
-  //         "You aren't the owner"
-  //       );
-  //     });
-
-  //     it("Shouldn't fail if the unlockTime has arrived and the owner calls it", async function () {
-  //       const { lock, unlockTime } = await loadFixture(deployPointlessCurrency);
-
-  //       // Transactions are sent using the first signer by default
-  //       await time.increaseTo(unlockTime);
-
-  //       await expect(lock.withdraw()).not.to.be.reverted;
-  //     });
-  //   });
-
-  //   describe("Events", function () {
-  //     it("Should emit an event on withdrawals", async function () {
-  //       const { lock, unlockTime, lockedAmount } = await loadFixture(
-  //         deployPointlessCurrency
-  //       );
-
-  //       await time.increaseTo(unlockTime);
-
-  //       await expect(lock.withdraw())
-  //         .to.emit(lock, "Withdrawal")
-  //         .withArgs(lockedAmount, anyValue); // We accept any value as `when` arg
-  //     });
-  //   });
-
-  //   describe("Transfers", function () {
-  //     it("Should transfer the funds to the owner", async function () {
-  //       const { lock, unlockTime, lockedAmount, owner } = await loadFixture(
-  //         deployPointlessCurrency
-  //       );
-
-  //       await time.increaseTo(unlockTime);
-
-  //       await expect(lock.withdraw()).to.changeEtherBalances(
-  //         [owner, lock],
-  //         [lockedAmount, -lockedAmount]
-  //       );
-  //     });
-  //   });
-  // });
+      await contract.transfer(otherAccount.address, 10);
+      const updatedOwnerBalance = await contract.balanceOf(owner.address);
+      expect(updatedOwnerBalance.toNumber()).to.equal(initialSupply - 10);
+      const otherAccountBalance = await contract.balanceOf(
+        otherAccount.address
+      );
+      expect(otherAccountBalance.toNumber()).to.equal(10);
+    });
+  });
 });
