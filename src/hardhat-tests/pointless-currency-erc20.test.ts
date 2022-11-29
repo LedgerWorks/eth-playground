@@ -6,7 +6,7 @@ import { BigNumber } from "ethers";
 
 describe("PointlessCurrencyERC20", () => {
   async function deployPointlessCurrency() {
-    // Contracts are deployed using the first signer/account by default
+    // Contracts are deployed using the first signer/accounts by default
     const [owner, otherAccount] = await ethers.getSigners();
 
     const PointlessCurrency = await ethers.getContractFactory(
@@ -18,7 +18,7 @@ describe("PointlessCurrencyERC20", () => {
     return { contract, initialSupply, owner, otherAccount };
   }
 
-  describe("deployment", function () {
+  describe("deployment", () => {
     it("should set the right initial supply", async () => {
       const { contract, initialSupply, owner } = await loadFixture(
         deployPointlessCurrency
