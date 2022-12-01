@@ -63,7 +63,7 @@ tests for the contract in the [src/hardhat-tests directory](src/hardhat-tests/).
 
 To deploy a new contract, take the following steps:
 
-1. Add the contract to the `deployments` array in the file [src/contracts/deploy.ts](src/contracts/deploy.ts).
+1. Add the contract to the `deployments` array in the file [src/hardhat-scripts/deploy.ts](src/hardhat-scripts/deploy.ts).
 2. Run the deploy script via `npm run hardhat:deploy`
 
 You can set your private key to use when deploying using the `PRIVATE_KEY` environment variable. You can set the `NETWORK` environment variable to change the network being deployed to.

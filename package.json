@@ -8,7 +8,7 @@
     "test": "hardhat test",
     "hardhat:node": "hardhat node",
     "hardhat:compile": "hardhat compile",
-    "hardhat:deploy": "hardhat run --network ${NETWORK:-hardhat} src/contracts/deploy.ts",
+    "hardhat:deploy": "hardhat run --network ${NETWORK:-hardhat} src/hardhat-scripts/deploy.ts",
     "play": "node -r esbuild-runner/register src/program.ts"
   },
   "author": "",

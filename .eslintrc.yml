@@ -56,11 +56,7 @@ rules:
     - newlines-between: always
   no-return-await: off
   no-await-in-loop: off
-  no-console:
-    - error
-    - allow:
-        - warn
-        - error
+  no-console: "off"
   "@typescript-eslint/no-use-before-define": warn
   "@typescript-eslint/return-await":
     - error
