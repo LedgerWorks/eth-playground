@@ -88,7 +88,7 @@ export const sendAvax = async (amount, to, options: SendAvaxOptions) => {
   );
 };
 
-const register = (): void => {
+export const register = (): void => {
   program
     .command("send-avax")
     .description("Send AVAX to another address")

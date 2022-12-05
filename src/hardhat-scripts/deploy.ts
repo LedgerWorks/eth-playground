@@ -6,7 +6,9 @@ function setupDeployment(name: string, ...constructorArgs: unknown[]) {
     const deployment = await contract.deploy(...constructorArgs);
     await deployment.deployed();
     console.info(
-      `Deployed ${name} with constructor args: ${constructorArgs}. Address: ${deployment.address}`
+      `Deployed ${name} with constructor args: ${constructorArgs}. Address: ${
+        deployment.address
+      }\n${(JSON.stringify(deployment), null, 2)}`
     );
   };
 }

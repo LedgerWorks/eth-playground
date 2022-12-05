@@ -15,7 +15,7 @@ export const createAvaxAddress = async () => {
   console.log("Public Key (C-Chain): ", publicKeyString);
 };
 
-const register = (): void => {
+export const register = (): void => {
   program
     .command("create-avax-address")
     .description(
@@ -25,5 +25,3 @@ const register = (): void => {
       return wrapAction(createAvaxAddress);
     });
 };
-
-export default { register };

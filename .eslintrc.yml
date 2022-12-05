@@ -51,9 +51,7 @@ rules:
   no-plusplus: off
   import/prefer-default-export: off
   import/newline-after-import: error
-  import/order:
-    - warn
-    - newlines-between: always
+  import/order: off
   no-return-await: off
   no-await-in-loop: off
   no-console: "off"
