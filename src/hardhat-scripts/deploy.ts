@@ -6,14 +6,15 @@ function setupDeployment(name: string, ...constructorArgs: unknown[]) {
     const deployment = await contract.deploy(...constructorArgs);
     await deployment.deployed();
     console.info(
-      `Deployed ${name} with constructor args: ${constructorArgs}. Address: ${
-        deployment.address
-      }\n${(JSON.stringify(deployment), null, 2)}`
+      `Deployed ${name} with constructor args: ${constructorArgs}. Address: ${deployment.address}`
     );
   };
 }
 
-const deployments = [setupDeployment("PointlessCurrencyERC20", 5000)];
+const deployments = [
+  // setupDeployment("PointlessCurrencyERC20", 5000),
+  setupDeployment("TransferFundsViaContract"),
+];
 
 async function main() {
   await Promise.all(deployments.map((deployment) => deployment()));
