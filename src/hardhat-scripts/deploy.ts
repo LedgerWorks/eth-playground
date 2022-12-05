@@ -1,23 +1,25 @@
 import { ethers } from "hardhat";
 
-function setupDeployment(name: string, ...constructorArgs: unknown[]) {
+function setupDeployment(name: string, ...constructorArgs: unknown[]): () => Promise<void> {
   return async () => {
     const contract = await ethers.getContractFactory(name);
     const deployment = await contract.deploy(...constructorArgs);
     await deployment.deployed();
-    console.info(
-      `Deployed ${name} with constructor args: ${constructorArgs}. Address: ${deployment.address}`
-    );
+    const argsString = constructorArgs.length ? `Constructor args: ${constructorArgs}, ` : "";
+    console.info(`Deployed ${name}. ${argsString}Address: ${deployment.address}`);
   };
 }
 
 const deployments = [
-  // setupDeployment("PointlessCurrencyERC20", 5000),
+  setupDeployment("PointlessCurrencyERC20", 5000),
   setupDeployment("TransferFundsViaContract"),
 ];
 
 async function main() {
-  await Promise.all(deployments.map((deployment) => deployment()));
+  await deployments.reduce(async (previousDeployment, deployment) => {
+    await previousDeployment;
+    return deployment();
+  }, Promise.resolve());
 }
 
 main().catch((error) => {
