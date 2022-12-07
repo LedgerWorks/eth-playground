@@ -3,5 +3,6 @@ node_modules/
 out/*
 build/
 dist/
+artifacts/
 hardhat-cache/
 typechain-types/
