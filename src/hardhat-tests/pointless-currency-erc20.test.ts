@@ -2,7 +2,6 @@ import "@nomicfoundation/hardhat-chai-matchers";
 import { loadFixture } from "@nomicfoundation/hardhat-network-helpers";
 import { expect } from "chai";
 import { ethers } from "hardhat";
-import { BigNumber } from "ethers";
 
 describe("PointlessCurrencyERC20", () => {
   async function deployPointlessCurrency() {
@@ -20,7 +19,7 @@ describe("PointlessCurrencyERC20", () => {
     it("should set the right initial supply", async () => {
       const { contract, initialSupply, owner } = await loadFixture(deployPointlessCurrency);
 
-      const ownerBalance: BigNumber = await contract.balanceOf(owner.address);
+      const ownerBalance = await contract.balanceOf(owner.address);
       expect(ownerBalance.toNumber()).to.equal(initialSupply);
     });
   });

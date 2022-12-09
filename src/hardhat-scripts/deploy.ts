@@ -39,8 +39,11 @@ function independentDeployment(name: string, ...constructorArgs: unknown[]): Dep
 }
 
 const deployments: DeploymentBuilder[] = [
-  independentDeployment("CounterContract"),
-  independentDeployment("DelegatingContract"),
+  independentDeployment("V1Subcontract"),
+  {
+    name: "UpdatableContract",
+    constructorArgBuilder: (previousDeployments) => [previousDeployments.V1Subcontract.address],
+  },
 ];
 
 async function main() {
