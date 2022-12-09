@@ -7,13 +7,13 @@ contract PointlessCurrencyERC20 {
   event Approval(address indexed tokenOwner, address indexed spender, uint tokens);
 
   // Token metadata
-  string public constant name = "Pointless Currency";
+  string public constant name = "Pointless Currency less long";
   string public constant symbol = "PNTLS";
-  uint8 public constant decimals = 18;
+  uint8 public constant decimals = 3;
   mapping(address => uint256) balances;
-  mapping(address => mapping (address => uint256)) allowed;
+  mapping(address => mapping(address => uint256)) allowed;
   uint256 totalSupply_;
-  
+
   // Functions
   constructor(uint256 total) {
     totalSupply_ = total;
