@@ -18,6 +18,10 @@ contract V1Subcontract {
   int private _count = 0;
   string public constant description = "I can increment and decrement by 1";
 
+  function add(int shwiggity) public payable {
+    _count += shwiggity;
+  }
+
   function increment() public payable {
     _count += 1;
   }
@@ -34,6 +38,10 @@ contract V1Subcontract {
 contract V2Subcontract {
   int private _count = 0;
   string public constant description = "New and improved! I can increment and decrement by 2";
+
+  function add(int shwiggity) public payable {
+    _count += shwiggity;
+  }
 
   function increment() public payable {
     _count += 2;
