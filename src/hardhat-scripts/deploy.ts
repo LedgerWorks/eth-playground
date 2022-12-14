@@ -39,7 +39,10 @@ function independentDeployment(name: string, ...constructorArgs: unknown[]): Dep
 }
 
 const deployments: DeploymentBuilder[] = [
+  independentDeployment("TransferFundsViaContract"),
+  independentDeployment("PointlessCurrencyERC20", 5000),
   independentDeployment("V1Subcontract"),
+  independentDeployment("V2Subcontract"),
   {
     name: "UpdatableContract",
     constructorArgBuilder: (previousDeployments) => [previousDeployments.V1Subcontract.address],
