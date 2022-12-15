@@ -47,6 +47,7 @@ const deployments: DeploymentBuilder[] = [
     name: "UpdatableContract",
     constructorArgBuilder: (previousDeployments) => [previousDeployments.V1Subcontract.address],
   },
+  independentDeployment("TypesPlinking"),
 ];
 
 async function main() {
