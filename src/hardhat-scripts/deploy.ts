@@ -49,7 +49,15 @@ const deployments: DeploymentBuilder[] = [
   //   name: "UpdatableContract",
   //   constructorArgBuilder: (previousDeployments) => [previousDeployments.V1Subcontract.address],
   // },
-  independentDeployment("TypesPlinking"),
+  // independentDeployment("TypesPlinking"),
+  // tuple parameter can be passed as an object which represents the solidity struct
+  // independentDeployment("TupleContract", {
+  //   name: "CostalotofmoneyCo",
+  //   availableCash: 5000,
+  //   items: ["Jelly"],
+  // }),
+  // tuple parameter can be passed the way remix.ethereum.org accepts the struct
+  independentDeployment("TupleContract", ["schnuckies", 10000, ["Peanut Butter"]]),
 ];
 
 async function main() {
