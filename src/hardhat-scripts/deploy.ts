@@ -1,4 +1,4 @@
-import { ethers } from "hardhat";
+import { ethers, network } from "hardhat";
 
 type DeploymentResult = {
   name: string;
@@ -27,7 +27,9 @@ async function deploy(
   const deployment = await contract.deploy(...constructorArgs);
   await deployment.deployed();
   const argsString = constructorArgs.length ? `Constructor args: ${constructorArgs}, ` : "";
-  console.info(`Deployed ${deploymentBuilder.name}. ${argsString}Address: ${deployment.address}`);
+  console.info(
+    `Deployed ${deploymentBuilder.name} to the ${network.name} network. ${argsString}Address: ${deployment.address}`
+  );
   return { name: deploymentBuilder.name, address: deployment.address };
 }
 
@@ -39,14 +41,14 @@ function independentDeployment(name: string, ...constructorArgs: unknown[]): Dep
 }
 
 const deployments: DeploymentBuilder[] = [
-  independentDeployment("TransferFundsViaContract"),
-  independentDeployment("PointlessCurrencyERC20", 5000),
-  independentDeployment("V1Subcontract"),
-  independentDeployment("V2Subcontract"),
-  {
-    name: "UpdatableContract",
-    constructorArgBuilder: (previousDeployments) => [previousDeployments.V1Subcontract.address],
-  },
+  // independentDeployment("TransferFundsViaContract"),
+  // independentDeployment("PointlessCurrencyERC20", 5000),
+  // independentDeployment("V1Subcontract"),
+  // independentDeployment("V2Subcontract"),
+  // {
+  //   name: "UpdatableContract",
+  //   constructorArgBuilder: (previousDeployments) => [previousDeployments.V1Subcontract.address],
+  // },
   independentDeployment("TypesPlinking"),
 ];
 
