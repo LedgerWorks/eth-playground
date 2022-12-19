@@ -81,41 +81,43 @@ describe("TupleContract", () => {
       expect(secondItemQuantity).to.equal(storeStruct.items[1].quantity);
       expect(name).to.equal(storeStruct.name);
     });
+  });
 
-    describe("add item", () => {
-      it("should update items in tuple store", async () => {
-        const storeName = "schnuckies";
-        const availableCash = 500;
-        const items: string[] = [];
-        const constructorParams = [storeName, availableCash];
-        const { contract } = await loadFixture(deployWithConstructor(constructorParams, items));
+  describe("add item", () => {
+    it("should update items in tuple store", async () => {
+      const storeName = "schnuckies";
+      const availableCash = 500;
+      const items: string[] = [];
+      const constructorParams = [storeName, availableCash];
+      const { contract } = await loadFixture(deployWithConstructor(constructorParams, items));
 
-        const itemCount = await contract._itemCount();
-        expect(itemCount).to.equal(0);
+      const itemCount = await contract._itemCount();
+      expect(itemCount).to.equal(0);
 
-        await contract.addItem({ name: "creamy peanut butter", quantity: 100 });
-        await contract.addItem({ name: "crunchy peanut butter", quantity: 200 });
+      await contract.addItem({ name: "creamy peanut butter", quantity: 100 });
+      await contract.addItem({ name: "crunchy peanut butter", quantity: 200 });
 
-        const updatedItemCount = await contract._itemCount();
-        expect(updatedItemCount).to.equal(2);
-      });
+      const updatedItemCount = await contract._itemCount();
+      expect(updatedItemCount).to.equal(2);
+    });
+  });
 
-      it("should update the total quantity of items", async () => {
-        const storeName = "schnuckies";
-        const availableCash = 500;
-        const items: string[] = [];
-        const constructorParams = [storeName, availableCash];
-        const { contract } = await loadFixture(deployWithConstructor(constructorParams, items));
+  describe("getAllItemsQuantity", () => {
+    it("should update the total quantity of items", async () => {
+      const storeName = "schnuckies";
+      const availableCash = 500;
+      const items: string[] = [];
+      const constructorParams = [storeName, availableCash];
+      const { contract } = await loadFixture(deployWithConstructor(constructorParams, items));
 
-        const itemsTotal = await contract.getAllItemsQuantity();
-        expect(itemsTotal).to.equal(0);
+      const itemsTotal = await contract.getAllItemsQuantity();
+      expect(itemsTotal).to.equal(0);
 
-        await contract.addItem({ name: "creamy peanut butter", quantity: 100 });
-        await contract.addItem({ name: "creamy peanut butter", quantity: 50 });
+      await contract.addItem({ name: "creamy peanut butter", quantity: 100 });
+      await contract.addItem({ name: "creamy peanut butter", quantity: 50 });
 
-        const itemsUpdatedTotal = await contract.getAllItemsQuantity();
-        expect(itemsUpdatedTotal).to.equal(150);
-      });
+      const itemsUpdatedTotal = await contract.getAllItemsQuantity();
+      expect(itemsUpdatedTotal).to.equal(150);
     });
   });
 });
