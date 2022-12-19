@@ -2,18 +2,19 @@
 pragma solidity >=0.7.0 <0.9.0;
 
 contract TupleContract {
+
     struct Store {
         string name;
         int availableCash;
-        string[] items;
     }
 
     struct Item {
+        string name;
         int quantity;
     }
 
     Store public _tupleStore;
-    string[] public _items;
+    Item[] public _items;
     uint public _itemCount;
     int public _availableCash;
     string public _name;
@@ -25,26 +26,32 @@ contract TupleContract {
         _;
     }
 
-    constructor(Store memory tupleStore) {
+    constructor(Store memory tupleStore, Item[] memory tupleItems) {
         owner = msg.sender;
         
         _tupleStore = tupleStore;
-        _items = tupleStore.items;
-        _itemCount = tupleStore.items.length;
+        for (uint i = 0; i < tupleItems.length; i++) {
+            _items.push(Item({
+                name: tupleItems[i].name,
+                quantity: tupleItems[i].quantity
+            }));
+        }
+        _itemCount = _items.length;
         _availableCash = tupleStore.availableCash;
         _name = tupleStore.name;
     }
 
-    function addItem(string memory item) public onlyOwner {
-        _tupleStore.items.push(item);
-        _items = _tupleStore.items;
-        _itemCount = _tupleStore.items.length;
+    function addItem(Item calldata item) public onlyOwner {
+        _items.push(Item({name: item.name, quantity: item.quantity}));
+        _itemCount = _items.length;
     }
 
-    // function getItemQuantity() public {
-    //      Item[] storage setItems = _tupleStore.items;
-    //     for(uint256 i = 0; i < _tupleStore.items.length; i++) {
-    //         _quantity += _tupleStore.items[i].quantity + _quantity;
-    //     }
-    // }
+    function getAllItemsQuantity() public view returns(int) {
+        int total;
+        for(uint256 i = 0; i < _items.length; i++) {
+            total += _items[i].quantity;
+        }
+
+        return total;
+    }
 }
