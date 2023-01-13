@@ -43,6 +43,7 @@ function independentDeployment(name: string, ...constructorArgs: unknown[]): Dep
 const deployments: DeploymentBuilder[] = [
   // independentDeployment("TransferFundsViaContract"),
   // independentDeployment("PointlessCurrencyERC20", 5000),
+  independentDeployment("SecurityMistakesERC20", 5000),
   // independentDeployment("V1Subcontract"),
   // independentDeployment("V2Subcontract"),
   // {
@@ -60,11 +61,11 @@ const deployments: DeploymentBuilder[] = [
   //   [{ name: "Jelly", quantity: 50 }]
   // ),
   // tuple parameter can be passed the way remix.ethereum.org accepts the struct
-  independentDeployment(
-    "TupleContract",
-    ["schnuckies", 10000],
-    [{ name: "Peanut Butter", quantity: 1000 }]
-  ),
+  // independentDeployment(
+  //   "TupleContract",
+  //   ["schnuckies", 10000],
+  //   [{ name: "Peanut Butter", quantity: 1000 }]
+  // ),
 ];
 
 async function main() {
