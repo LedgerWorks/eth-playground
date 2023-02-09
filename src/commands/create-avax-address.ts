@@ -18,9 +18,7 @@ export const createAvaxAddress = async () => {
 export const register = (): void => {
   program
     .command("create-avax-address")
-    .description(
-      "create a new address for avalanche returning a public and private key"
-    )
+    .description("create a new address for avalanche returning a public and private key")
     .action(() => {
       return wrapAction(createAvaxAddress);
     });
