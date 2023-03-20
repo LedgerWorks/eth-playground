@@ -20,9 +20,7 @@ export const chainId = 43113;
 function loadEnv(): void {
   dotenv.config();
 
-  const missingEnvVars = ["PRIVATE_KEY", "RPC_HOST"]
-    .filter((s) => !process.env[s])
-    .join(", ");
+  const missingEnvVars = ["PRIVATE_KEY", "RPC_HOST"].filter((s) => !process.env[s]).join(", ");
 
   if (missingEnvVars) {
     throw new Error(
@@ -38,9 +36,7 @@ export default (): AvalancheClient => {
     const { PRIVATE_KEY, RPC_HOST } = process.env as Env;
 
     // For sending a signed transaction to the network
-    const HTTPSProvider = new ethers.providers.JsonRpcProvider(
-      `https://${RPC_HOST}/ext/bc/C/rpc`
-    );
+    const HTTPSProvider = new ethers.providers.JsonRpcProvider(`https://${RPC_HOST}/ext/bc/C/rpc`);
 
     // For estimating max fee and priority fee using CChain APIs
     const avalanche = new Avalanche(RPC_HOST, undefined, "https", chainId);

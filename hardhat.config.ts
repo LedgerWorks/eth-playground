@@ -27,6 +27,11 @@ const config: HardhatUserConfig = {
       chainId: 43113,
       accounts: [getPrivateKey()],
     },
+    sepolia: {
+      url: "https://rpc.sepolia.org",
+      chainId: 11155111,
+      accounts: [getPrivateKey()],
+    },
   },
 };
 
