@@ -24,7 +24,8 @@ contract TypesPlinking {
     address papaJohnsAddress,
     OriginalTlcMember tlcMember,
     bytes1 oneByter,
-    bytes dynamicByter
+    bytes dynamicByter,
+    bytes[] arrayOBytes
   );
 
   function iTakeLotsOfTypes(
@@ -35,7 +36,8 @@ contract TypesPlinking {
     address papaJohnsAddress,
     OriginalTlcMember tlcMember,
     bytes1 oneByter,
-    bytes calldata dynamicByter
+    bytes calldata dynamicByter,
+    bytes[] memory arrayOBytes
   ) public payable returns (bool) {
     emit TypesTaken(
       pantSize,
@@ -45,7 +47,8 @@ contract TypesPlinking {
       papaJohnsAddress,
       tlcMember,
       oneByter,
-      dynamicByter
+      dynamicByter,
+      arrayOBytes
     );
     return true;
   }

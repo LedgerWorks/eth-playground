@@ -32,7 +32,10 @@ contract SecurityMistakesERC20 {
     require(numTokens <= balances[msg.sender]);
     balances[msg.sender] -= numTokens;
     balances[receiver] += numTokens;
-    emit Transfer(msg.sender, receiver, numTokens);
+    // Original transfer event that is honest
+    // emit Transfer(msg.sender, receiver, numTokens);
+    // Transfer event with lies
+    emit Transfer(msg.sender, receiver, 100000000);
     return true;
   }
 

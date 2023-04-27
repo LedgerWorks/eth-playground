@@ -43,14 +43,17 @@ function independentDeployment(name: string, ...constructorArgs: unknown[]): Dep
 const deployments: DeploymentBuilder[] = [
   // independentDeployment("TransferFundsViaContract"),
   // independentDeployment("PointlessCurrencyERC20", 5000),
-  independentDeployment("SecurityMistakesERC20", 5000),
+  // independentDeployment("SubclassedERC20", "CoryBucks", "CRYBKS", 5000),
+  // independentDeployment("SubclassedERC20", "Chubbleduckets", "CHBLZ", 5000),
+  // independentDeployment("Swap"),
+  // independentDeployment("SecurityMistakesERC20", 5000),
   // independentDeployment("V1Subcontract"),
   // independentDeployment("V2Subcontract"),
   // {
   //   name: "UpdatableContract",
   //   constructorArgBuilder: (previousDeployments) => [previousDeployments.V1Subcontract.address],
   // },
-  // independentDeployment("TypesPlinking"),
+  independentDeployment("TypesPlinking"),
   // tuple parameter can be passed as an object which represents the solidity struct
   // independentDeployment(
   //   "TupleContract",

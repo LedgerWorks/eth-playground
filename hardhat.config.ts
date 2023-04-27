@@ -13,7 +13,9 @@ function getPrivateKey(): string {
 }
 
 const config: HardhatUserConfig = {
-  solidity: "0.8.17",
+  solidity: {
+    compilers: [{ version: "0.8.17" }, { version: "0.7.6" }],
+  },
   paths: {
     sources: "./src/contracts",
     tests: "./src/hardhat-tests",
@@ -30,6 +32,11 @@ const config: HardhatUserConfig = {
     sepolia: {
       url: "https://rpc.sepolia.org",
       chainId: 11155111,
+      accounts: [getPrivateKey()],
+    },
+    ethereum: {
+      url: "https://rpc.ankr.com/eth",
+      chainId: 1,
       accounts: [getPrivateKey()],
     },
   },
