@@ -78,3 +78,7 @@ You can run a local Hardhat node to deploy and interact with a smart contract lo
 #### Deploy to Avalanche Fuji Network
 
 To deploy to Fuji, run `NETWORK=fuji npm run hardhat:deploy`. If you haven't set your `PRIVATE_KEY` environment variable, you'll need to do that as well.
+
+#### Deploy to Ethereum Sepolia Network
+
+To deploy to Fuji, run `NETWORK=sepolia npm run hardhat:deploy`. If you haven't set your `PRIVATE_KEY` environment variable, you'll need to do that as well.
