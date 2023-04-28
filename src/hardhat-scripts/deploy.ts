@@ -69,6 +69,7 @@ const deployments: DeploymentBuilder[] = [
   //   ["schnuckies", 10000],
   //   [{ name: "Peanut Butter", quantity: 1000 }]
   // ),
+  // independentDeployment("CoinFlip"),
 ];
 
 async function main() {
