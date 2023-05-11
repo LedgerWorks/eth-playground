@@ -7,7 +7,7 @@ export const getAvaxTx = async (txHash: string) => {
   const client = createAvalancheClient();
 
   console.log("Requesting transaction from RPC for txHash: ", txHash);
-  const transaction = await client.HTTPSProvider.getTransaction(txHash);
+  const transaction = await client.provider.getTransaction(txHash);
 
   console.log("transaction response: ", transaction);
 };

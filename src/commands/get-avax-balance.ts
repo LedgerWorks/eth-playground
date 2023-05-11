@@ -11,7 +11,7 @@ type GetBalanceOptions = {
 
 const getBalance = async (address: string, blockTag?: number) => {
   const client = createAvalancheClient();
-  const balance = await client.HTTPSProvider.getBalance(address, blockTag);
+  const balance = await client.provider.getBalance(address, blockTag);
   const balanceInAvax = ethers.utils.formatUnits(balance, 18);
   console.log(`AVAX balance for ${address}: ${balanceInAvax}`);
 };

@@ -1,10 +1,7 @@
 import { ethers } from "ethers";
 import { program } from "commander";
 import wrapAction from "../util/wrap-action";
-import createAvalancheClient, {
-  AvalancheClient,
-  chainId,
-} from "../util/create-avalanche-client";
+import createAvalancheClient, { AvalancheClient, chainId } from "../util/create-avalanche-client";
 
 type SendAvaxOptions = {
   maxFeePerGas?: any;
@@ -23,8 +20,7 @@ const calcFeeData = async (
     maxPriorityFeePerGas == undefined
       ? parseInt(await client.cchain.getMaxPriorityFeePerGas(), 16) / 1e9
       : maxPriorityFeePerGas;
-  maxFeePerGas =
-    maxFeePerGas == undefined ? baseFee + maxPriorityFeePerGas : maxFeePerGas;
+  maxFeePerGas = maxFeePerGas == undefined ? baseFee + maxPriorityFeePerGas : maxFeePerGas;
 
   if (maxFeePerGas < maxPriorityFeePerGas) {
     throw "Error: Max fee per gas cannot be less than max priority fee per gas";
@@ -42,9 +38,7 @@ export const sendAvax = async (amount, to, options: SendAvaxOptions) => {
   let { maxFeePerGas, maxPriorityFeePerGas, nonce } = options;
 
   if (nonce == undefined) {
-    nonce = await client.HTTPSProvider.getTransactionCount(
-      client.wallet.address
-    );
+    nonce = await client.provider.getTransactionCount(client.wallet.address);
   }
   console.info(`nonce differentiator: ${nonce}`);
 
@@ -72,7 +66,7 @@ export const sendAvax = async (amount, to, options: SendAvaxOptions) => {
     chainId,
   };
 
-  tx.gasLimit = await client.HTTPSProvider.estimateGas(tx);
+  tx.gasLimit = await client.provider.estimateGas(tx);
 
   const signedTx = await client.wallet.signTransaction(tx);
   const txHash = ethers.utils.keccak256(signedTx);
@@ -80,7 +74,7 @@ export const sendAvax = async (amount, to, options: SendAvaxOptions) => {
   console.log(`Sending signed transaction txHash: ${txHash}`);
 
   // Sending a signed transaction and waiting for its inclusion
-  await (await client.HTTPSProvider.sendTransaction(signedTx)).wait();
+  await (await client.provider.sendTransaction(signedTx)).wait();
 
   console.log(
     `View transaction with nonce ${nonce} - Fuji Testnet: https://testnet.snowtrace.io/tx/${txHash}`,
@@ -94,18 +88,12 @@ export const register = (): void => {
     .description("Send AVAX to another address")
     .argument("<number>", "The amount of AVAX to send the receiver address")
     .argument("<string>", "Receiver address to send AVAX")
-    .option(
-      "--maxFeePerGas <number>",
-      "maximum fee per gas you want to pay in nAVAX"
-    )
+    .option("--maxFeePerGas <number>", "maximum fee per gas you want to pay in nAVAX")
     .option(
       "--maxPriorityFeePerGas <number>",
       "maximum priority fee per gas you want to pay in nAVAX"
     )
-    .option(
-      "--nonce <number>",
-      "differentiator for more than 1 transaction with same signer"
-    )
+    .option("--nonce <number>", "differentiator for more than 1 transaction with same signer")
     .action((amount, receiverAddress, options: Partial<SendAvaxOptions>) => {
       return wrapAction(sendAvax, amount, receiverAddress, options);
     });
