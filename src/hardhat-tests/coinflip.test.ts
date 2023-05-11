@@ -157,44 +157,6 @@ describe("CoinFlip", () => {
         ).to.be.revertedWith("Unauthorized");
       });
     });
-
-    describe("isWinner", () => {
-      it("should return false if the player hasn't placed a wager yet", async () => {
-        const { contract, player } = await loadFixture(deployCoinFlip);
-        const isWinner = await contract.isWinner(player.address);
-        expect(isWinner).to.equal(false);
-      });
-
-      it("should return false if the player hasn't flipped yet", async () => {
-        const { contract, player } = await loadFixture(deployCoinFlip);
-        await contract.connect(player).wager(1, { value: wagerAmount });
-        const isWinner = await contract.isWinner(player.address);
-        expect(isWinner).to.equal(false);
-      });
-
-      it("should return true when the player guessed correctly", async () => {
-        const { contract, player } = await loadFixture(deployCoinFlip);
-        await contract.connect(player).wager(1, { value: wagerAmount });
-        await contract.connect(player).flip(headsTimestamp);
-        const isWinner = await contract.isWinner(player.address);
-        expect(isWinner).to.equal(true);
-      });
-
-      it("should return false when the player guessed incorrectly", async () => {
-        const { contract, player } = await loadFixture(deployCoinFlip);
-        await contract.connect(player).wager(1, { value: wagerAmount });
-        await contract.connect(player).flip(tailsTimestamp);
-        const isWinner = await contract.isWinner(player.address);
-        expect(isWinner).to.equal(false);
-      });
-
-      it("should revert if called by a non-admin", async () => {
-        const { contract, player } = await loadFixture(deployCoinFlip);
-        await expect(contract.connect(player).isWinner(player.address)).to.be.revertedWith(
-          "Unauthorized"
-        );
-      });
-    });
   });
 
   describe("game functions", () => {

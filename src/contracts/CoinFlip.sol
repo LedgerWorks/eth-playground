@@ -9,7 +9,7 @@ pragma solidity >=0.7.0 <0.9.0;
   The smart contract loosely mimics a crypto "double or nothing" coin
   flip game. (see https://degencoinflip.com)
 
-  The exploit found in the "flip" function. It accepts a timestamp
+  The exploit is found in the "flip" function. It accepts a timestamp
   sent in by the caller. That timestamp is then used to determine
   whether the coin flip result is heads or tails.
 
@@ -19,8 +19,8 @@ pragma solidity >=0.7.0 <0.9.0;
   sending in a false timestamp to produce the outcome they desired.
 
   Here's the exploit:
-    If the timestamp ends in an even number, the result will be Heads
-    If the timestamp ends in an odd number, the result will be Tails
+    If the timestamp is an even number, the result will be Heads
+    If the timestamp is an odd number, the result will be Tails
 */
 
 contract CoinFlip {
@@ -125,6 +125,15 @@ contract CoinFlip {
     return players[_player].banned;
   }
 
+  function isWinner(address _player) public view returns (bool) {
+    Player storage player = players[_player];
+    Flip storage currentFlip = player.flips[player.currentFlip];
+    return
+      currentFlip.calledSide != Side.Uninitialized &&
+      currentFlip.flipResult != Side.Uninitialized &&
+      currentFlip.calledSide == currentFlip.flipResult;
+  }
+
   // game functions
   function wager(Side _calledSide) public payable onlyPlayers(FlipStatus.Uninitialized) {
     uint256 wagerAmount = msg.value;
@@ -204,14 +213,5 @@ contract CoinFlip {
   function overrideFlipStatus(address _player, FlipStatus _status) public onlyOwner {
     Player storage playerState = players[_player];
     playerState.flips[playerState.currentFlip].status = _status;
-  }
-
-  function isWinner(address _player) public view onlyOwner returns (bool) {
-    Player storage player = players[_player];
-    Flip storage currentFlip = player.flips[player.currentFlip];
-    return
-      currentFlip.calledSide != Side.Uninitialized &&
-      currentFlip.flipResult != Side.Uninitialized &&
-      currentFlip.calledSide == currentFlip.flipResult;
   }
 }
