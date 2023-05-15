@@ -1,11 +1,78 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
-import { ethers } from "ethers";
+import { ethers, BigNumber } from "ethers";
 import { program } from "commander";
 import wrapAction from "../../util/wrap-action";
-import createAvalancheClient, { chainId } from "../../util/create-avalanche-client";
-import { TransactionOptions, calcFeeData, getContractAddress, getNonce } from "./helpers";
+import createAvalancheClient, {
+  AvalancheClient,
+  chainId,
+} from "../../util/create-avalanche-client";
+import { getContractAddress } from "./helpers";
 
-export const coinFlipDeposit = async (amount: ethers.BigNumber, options: TransactionOptions) => {
+type TransactionOptions = {
+  nonce: any;
+  maxFeePerGas: any;
+  maxPriorityFeePerGas: any;
+};
+
+const getNonce = async (client: AvalancheClient, options: TransactionOptions): Promise<number> => {
+  const nonce = Number.isNaN(parseInt(options.nonce, 10))
+    ? await client.provider.getTransactionCount(client.wallet.address)
+    : parseInt(options.nonce, 10);
+  console.info(`nonce differentiator: ${nonce}`);
+  return nonce;
+};
+
+const calculateMaxPriorityFeePerGas = async (
+  client: AvalancheClient,
+  options: TransactionOptions
+): Promise<number> => {
+  let maxPriorityFeePerGas = parseInt(options.maxPriorityFeePerGas, 10);
+  if (Number.isNaN(maxPriorityFeePerGas)) {
+    const chainMaxPriorityFeePerGas = await client.cchain.getMaxPriorityFeePerGas();
+    const parsedChainMaxPriorityFeePerGas = parseInt(chainMaxPriorityFeePerGas, 16);
+    maxPriorityFeePerGas = parsedChainMaxPriorityFeePerGas / 1e9;
+  }
+  console.info(`maxPriorityFeePerGas: ${maxPriorityFeePerGas}`);
+  return maxPriorityFeePerGas;
+};
+
+const calculateMaxFeePerGas = async (
+  client: AvalancheClient,
+  options: TransactionOptions,
+  maxPriorityFeePerGas: number
+): Promise<number> => {
+  let maxFeePerGas = parseInt(options.maxFeePerGas, 10);
+  if (Number.isNaN(maxFeePerGas)) {
+    const chainBaseFee = await client.cchain.getBaseFee();
+    const parsedChainBaseFee = parseInt(chainBaseFee, 16);
+    const baseFee = parsedChainBaseFee / 1e9;
+    maxFeePerGas = baseFee + maxPriorityFeePerGas;
+  }
+  console.info(`maxFeePerGas: ${maxFeePerGas}`);
+  return maxFeePerGas;
+};
+
+const calcFeeData = async (
+  client: AvalancheClient,
+  options: TransactionOptions
+): Promise<{
+  maxFeePerGas: ethers.BigNumber;
+  maxPriorityFeePerGas: ethers.BigNumber;
+}> => {
+  const maxPriorityFeePerGas = await calculateMaxPriorityFeePerGas(client, options);
+  const maxFeePerGas = await calculateMaxFeePerGas(client, options, maxPriorityFeePerGas);
+
+  if (maxFeePerGas < maxPriorityFeePerGas) {
+    throw new Error("Error: Max fee per gas cannot be less than max priority fee per gas");
+  }
+
+  return {
+    maxFeePerGas: ethers.utils.parseUnits(`${maxFeePerGas}`, "gwei"),
+    maxPriorityFeePerGas: ethers.utils.parseUnits(`${maxPriorityFeePerGas}`, "gwei"),
+  };
+};
+
+export const coinFlipDeposit = async (amount: BigNumber, options: TransactionOptions) => {
   const client = createAvalancheClient();
   const contractAddress = getContractAddress();
 
