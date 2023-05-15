@@ -1,110 +1,62 @@
-/* eslint-disable @typescript-eslint/no-explicit-any */
-import { ethers } from "ethers";
+import { Contract, ethers, Wallet } from "ethers";
+import { JsonRpcProvider } from "@ethersproject/providers";
 
-import { AvalancheClient } from "../../util/create-avalanche-client";
 import abi from "./abi";
 
-export const getContractAddress = (): string => {
-  const contractAddress = `${process.env.COINFLIP_CONTRACT_ADDRESS}`;
-  if (!contractAddress) {
-    throw new Error(
-      "No COINFLIP_CONTRACT_ADDRESS configured on the environment. Add it to your .env file."
-    );
+export const getRequired = (key: string): string => {
+  const value = `${process.env[key]}`;
+  if (!value) {
+    throw new Error(`No ${key} configured on the environment. Add it to your .env file.`);
   }
-  return contractAddress;
+  return value;
 };
 
-export const getPlayerAddress = (): string => {
-  const playerAddress = `${process.env.COINFLIP_PLAYER_ADDRESS}`;
-  if (!playerAddress) {
-    throw new Error(
-      "No COINFLIP_PLAYER_ADDRESS configured on the environment. Add it to your .env file."
-    );
+export const getOwnerKey = (): string => getRequired("COINFLIP_OWNER_KEY");
+
+export const getContractAddress = (): string => getRequired("COINFLIP_CONTRACT_ADDRESS");
+
+export const getPlayerAddress = (): string => getRequired("COINFLIP_PLAYER_ADDRESS");
+
+export const getPlayerKey = (): string => getRequired("COINFLIP_PLAYER_KEY");
+
+export const getRpcHost = (): string => getRequired("RPC_HOST");
+
+let provider: JsonRpcProvider | undefined;
+export const getProvider = (): JsonRpcProvider => {
+  if (!provider) {
+    provider = new ethers.providers.JsonRpcProvider(`https://${getRpcHost()}/ext/bc/C/rpc`);
   }
-  return playerAddress;
+  return provider;
 };
 
-export const getPlayerKey = (): string => {
-  const playerKey = `${process.env.COINFLIP_PLAYER_KEY}`;
-  if (!playerKey) {
-    throw new Error(
-      "No COINFLIP_PLAYER_KEY configured on the environment. Add it to your .env file."
-    );
+let ownerWallet: Wallet | undefined;
+export const getOwnerWallet = (): Wallet => {
+  if (!ownerWallet) {
+    ownerWallet = new Wallet(getOwnerKey(), getProvider());
   }
-  return playerKey;
+  return ownerWallet;
 };
 
-export type TransactionOptions = {
-  nonce: any;
-  maxFeePerGas: any;
-  maxPriorityFeePerGas: any;
-};
-
-export const getNonce = async (
-  client: AvalancheClient,
-  options: TransactionOptions
-): Promise<number> => {
-  const nonce = Number.isNaN(parseInt(options.nonce, 10))
-    ? await client.provider.getTransactionCount(client.wallet.address)
-    : parseInt(options.nonce, 10);
-  console.info(`nonce differentiator: ${nonce}`);
-  return nonce;
-};
-
-const calculateMaxPriorityFeePerGas = async (
-  client: AvalancheClient,
-  options: TransactionOptions
-): Promise<number> => {
-  let maxPriorityFeePerGas = parseInt(options.maxPriorityFeePerGas, 10);
-  if (Number.isNaN(maxPriorityFeePerGas)) {
-    const chainMaxPriorityFeePerGas = await client.cchain.getMaxPriorityFeePerGas();
-    const parsedChainMaxPriorityFeePerGas = parseInt(chainMaxPriorityFeePerGas, 16);
-    maxPriorityFeePerGas = parsedChainMaxPriorityFeePerGas / 1e9;
+let playerWallet: Wallet | undefined;
+export const getPlayerWallet = (): Wallet => {
+  if (!playerWallet) {
+    playerWallet = new Wallet(getPlayerKey(), getProvider());
   }
-  console.info(`maxPriorityFeePerGas: ${maxPriorityFeePerGas}`);
-  return maxPriorityFeePerGas;
+  return playerWallet;
 };
 
-const calculateMaxFeePerGas = async (
-  client: AvalancheClient,
-  options: TransactionOptions,
-  maxPriorityFeePerGas: number
-): Promise<number> => {
-  let maxFeePerGas = parseInt(options.maxFeePerGas, 10);
-  if (Number.isNaN(maxFeePerGas)) {
-    const chainBaseFee = await client.cchain.getBaseFee();
-    const parsedChainBaseFee = parseInt(chainBaseFee, 16);
-    const baseFee = parsedChainBaseFee / 1e9;
-    maxFeePerGas = baseFee + maxPriorityFeePerGas;
+let contractForOwner: Contract | undefined;
+export const getContractForOwner = (): Contract => {
+  if (!contractForOwner) {
+    contractForOwner = new Contract(getContractAddress(), abi, getOwnerWallet());
   }
-  console.info(`maxFeePerGas: ${maxFeePerGas}`);
-  return maxFeePerGas;
+  return contractForOwner;
 };
 
-export const calcFeeData = async (
-  client: AvalancheClient,
-  options: TransactionOptions
-): Promise<{
-  maxFeePerGas: ethers.BigNumber;
-  maxPriorityFeePerGas: ethers.BigNumber;
-}> => {
-  const maxPriorityFeePerGas = await calculateMaxPriorityFeePerGas(client, options);
-  const maxFeePerGas = await calculateMaxFeePerGas(client, options, maxPriorityFeePerGas);
-
-  if (maxFeePerGas < maxPriorityFeePerGas) {
-    throw new Error("Error: Max fee per gas cannot be less than max priority fee per gas");
+let contractForPlayer: Contract | undefined;
+export const getContractForPlayer = (): Contract => {
+  if (!contractForPlayer) {
+    contractForPlayer = new Contract(getContractAddress(), abi, getPlayerWallet());
   }
-
-  return {
-    maxFeePerGas: ethers.utils.parseUnits(`${maxFeePerGas}`, "gwei"),
-    maxPriorityFeePerGas: ethers.utils.parseUnits(`${maxPriorityFeePerGas}`, "gwei"),
-  };
-};
-
-export const getContract = (client: AvalancheClient): ethers.Contract => {
-  return new ethers.Contract(getContractAddress(), abi, client.provider);
-};
-
-export const getPlayerWallet = (client: AvalancheClient): ethers.Wallet => {
-  return new ethers.Wallet(getPlayerKey(), client.provider);
+  return contractForPlayer;
 };
