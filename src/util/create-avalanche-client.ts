@@ -12,7 +12,7 @@ type Env = {
 export type AvalancheClient = {
   wallet: Wallet;
   cchain: EVMAPI;
-  HTTPSProvider: JsonRpcProvider;
+  provider: JsonRpcProvider;
 };
 
 export const chainId = 43113;
@@ -36,7 +36,7 @@ export default (): AvalancheClient => {
     const { PRIVATE_KEY, RPC_HOST } = process.env as Env;
 
     // For sending a signed transaction to the network
-    const HTTPSProvider = new ethers.providers.JsonRpcProvider(`https://${RPC_HOST}/ext/bc/C/rpc`);
+    const provider = new ethers.providers.JsonRpcProvider(`https://${RPC_HOST}/ext/bc/C/rpc`);
 
     // For estimating max fee and priority fee using CChain APIs
     const avalanche = new Avalanche(RPC_HOST, undefined, "https", chainId);
@@ -45,7 +45,7 @@ export default (): AvalancheClient => {
     // For signing an unsigned transaction
     const wallet = new ethers.Wallet(PRIVATE_KEY);
 
-    return { cchain, wallet, HTTPSProvider };
+    return { cchain, wallet, provider };
   } catch (error) {
     console.error("Client creation failed", error);
     throw error;
