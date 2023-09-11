@@ -2,7 +2,7 @@
 type ActionArgs = any[];
 
 export default async function wrapAction(
-  action: (...args: ActionArgs) => Promise<void>,
+  action: (...args: ActionArgs) => Promise<void> | void,
   ...actionArgs: ActionArgs
 ): Promise<void> {
   await action(...actionArgs);
