@@ -10,8 +10,7 @@ contract RWATransfer {
   event Approval(address indexed tokenOwner, address indexed spender, uint tokens);
 
   // Token metadata
-  string public constant name =
-    "Demo currency simulating a token for real-world asset (RWA) transfer";
+  string public constant name = "Real-world asset transfer (demo)";
   string public constant symbol = "RWAT";
   uint8 public constant decimals = 2;
   mapping(address => uint256) balances;
