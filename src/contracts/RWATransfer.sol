@@ -1,14 +1,18 @@
 // SPDX-License-Identifier: GPL-3.0
-pragma solidity >=0.7.0 <0.9.0;
+// Steve's demo contract; a pretend ERC20 token representing transfer of real-world fungible money
+// This is not real at all, but we just needed an ERC20 token for demo'ing that didn't have
+// a ridiculous name like PointlessCurrency
+pragma solidity ^0.8.0;
 
-contract PointlessCurrencyERC20 {
+contract RWATransfer {
   // Events
   event Transfer(address indexed from, address indexed to, uint tokens);
   event Approval(address indexed tokenOwner, address indexed spender, uint tokens);
 
   // Token metadata
-  string public constant name = "Pointless currency with a vulnerability";
-  string public constant symbol = "PNTLS";
+  string public constant name =
+    "Demo currency simulating a token for real-world asset (RWA) transfer";
+  string public constant symbol = "RWAT";
   uint8 public constant decimals = 2;
   mapping(address => uint256) balances;
   mapping(address => mapping(address => uint256)) allowed;
