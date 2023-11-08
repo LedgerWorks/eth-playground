@@ -79,6 +79,17 @@ You can run a local Hardhat node to deploy and interact with a smart contract lo
 
 To deploy to Fuji, run `NETWORK=fuji npm run hardhat:deploy`. If you haven't set your `PRIVATE_KEY` environment variable, you'll need to do that as well.
 
+After deploying, you might want to [verify your contract as well](#verifying-a-contract)
+
 #### Deploy to Ethereum Sepolia Network
 
 To deploy to Fuji, run `NETWORK=sepolia npm run hardhat:deploy`. If you haven't set your `PRIVATE_KEY` environment variable, you'll need to do that as well.
+
+### Verifying a contract
+
+After deploying, you might want to verify your contract as well on the block explorer (Etherscan, Snowtrace, etc.). This allows for ABI decoding both in the explorer and our applications. To do so, take the following steps:
+
+1. Ensure you've set the environment variable for the explorer. E.g. on Avalanche, set `SNOWTRACE_API_KEY` to [your Snowtrace API key](https://docs.snowtrace.io/getting-started/viewing-api-usage-statistics).
+2. Run Hardhat's verify command. It looks something like this: `npx hardhat verify --network <network> <contract_address> "<constructor_arguments>"`.
+
+Example: To verify a contract deployed to Avalanche Fuji with a constructor argument of `10000000`, I used this command: `npx hardhat verify --network fuji 0xC893898E5ea42C5807521C82e7D868578018Ae9e "1000000"`

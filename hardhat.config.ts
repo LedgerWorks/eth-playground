@@ -4,17 +4,21 @@ import dotenv from "dotenv";
 
 dotenv.config();
 
-function getPrivateKey(): string {
-  const key = process.env.PRIVATE_KEY;
+function getEnvironmentVariable(name: string): string {
+  const key = process.env[name];
   if (!key) {
-    throw new Error("The PRIVATE_KEY environment variable must be set");
+    throw new Error(`The ${name} environment variable must be set`);
   }
-  return process.env.PRIVATE_KEY as string;
+  return key as string;
+}
+
+function getPrivateKey(): string {
+  return getEnvironmentVariable("PRIVATE_KEY");
 }
 
 const config: HardhatUserConfig = {
   solidity: {
-    compilers: [{ version: "0.8.17" }, { version: "0.7.6" }],
+    compilers: [{ version: "0.7.6" }, { version: "0.8.17" }],
   },
   paths: {
     sources: "./src/contracts",
@@ -39,6 +43,21 @@ const config: HardhatUserConfig = {
       chainId: 1,
       accounts: [getPrivateKey()],
     },
+  },
+  etherscan: {
+    apiKey: {
+      fuji: getEnvironmentVariable("SNOWTRACE_API_KEY"),
+    },
+    customChains: [
+      {
+        network: "fuji",
+        chainId: 43113,
+        urls: {
+          apiURL: "https://api-testnet.snowtrace.io/api",
+          browserURL: "https://testnet.snowtrace.io/",
+        },
+      },
+    ],
   },
 };
 
