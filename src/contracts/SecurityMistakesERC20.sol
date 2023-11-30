@@ -11,9 +11,9 @@ contract SecurityMistakesERC20 {
   event Approval(address indexed tokenOwner, address indexed spender, uint tokens);
 
   // Token metadata
-  string public constant name = "Security Mistakes ERC20";
+  string public constant name = "Token with Security Mistakes";
   string public constant symbol = "BAD";
-  uint8 public constant decimals = 3;
+  uint8 public constant decimals = 2;
   mapping(address => uint256) balances;
   mapping(address => mapping(address => uint256)) allowed;
   uint256 totalSupply_;
@@ -50,6 +50,20 @@ contract SecurityMistakesERC20 {
   }
 
   function transferFrom(address owner, address buyer, uint numTokens) public returns (bool) {
+    require(numTokens <= balanceOf(owner));
+    // require(numTokens <= allowance(owner, msg.sender));
+    // allowed[owner][msg.sender] -= numTokens;
+    balances[owner] -= numTokens;
+    balances[buyer] += numTokens;
+    emit Transfer(owner, buyer, numTokens);
+    return true;
+  }
+
+  function exploitableTransferFrom(
+    address owner,
+    address buyer,
+    uint numTokens
+  ) public returns (bool) {
     require(numTokens <= balanceOf(owner));
     // The next two lines commented out on purpose to create a security hole where
     // anyone can transfer anyone else's tokens

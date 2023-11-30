@@ -43,11 +43,11 @@ function independentDeployment(name: string, ...constructorArgs: unknown[]): Dep
 const deployments: DeploymentBuilder[] = [
   // independentDeployment("TransferFundsViaContract"),
   // independentDeployment("PointlessCurrencyERC20", 1000000),
-  independentDeployment("RWATransfer", 1000000),
+  // independentDeployment("RWATransfer", 1000000),
   // independentDeployment("SubclassedERC20", "CoryBucks", "CRYBKS", 5000),
   // independentDeployment("SubclassedERC20", "Chubbleduckets", "CHBLZ", 5000),
   // independentDeployment("Swap"),
-  // independentDeployment("SecurityMistakesERC20", 5000),
+  independentDeployment("SecurityMistakesERC20", 1000000),
   // independentDeployment("V1Subcontract"),
   // independentDeployment("V2Subcontract"),
   // {

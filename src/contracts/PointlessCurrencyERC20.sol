@@ -64,7 +64,6 @@ contract PointlessCurrencyERC20 {
     // Missing the "require" statement that prevents anyone from transferring
     // on behalf of someone else
     balances[owner] -= numTokens;
-    allowed[owner][msg.sender] -= numTokens;
     balances[buyer] += numTokens;
     emit Transfer(owner, buyer, numTokens);
     return true;
