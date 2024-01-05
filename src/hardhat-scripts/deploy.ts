@@ -48,7 +48,8 @@ const deployments: DeploymentBuilder[] = [
   // independentDeployment("SubclassedERC20", "Chubbleduckets", "CHBLZ", 5000),
   // independentDeployment("Swap"),
   // independentDeployment("SecurityMistakesERC20", 1000000),
-  independentDeployment("SecurityExploiter"),
+  // independentDeployment("SecurityExploiter"),
+  independentDeployment("TinyContract"),
   // independentDeployment("V1Subcontract"),
   // independentDeployment("V2Subcontract"),
   // {
