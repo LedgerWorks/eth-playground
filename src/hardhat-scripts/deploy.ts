@@ -49,7 +49,7 @@ const deployments: DeploymentBuilder[] = [
   // independentDeployment("Swap"),
   // independentDeployment("SecurityMistakesERC20", 1000000),
   // independentDeployment("SecurityExploiter"),
-  independentDeployment("TinyContract"),
+  // independentDeployment("TinyContract"),
   // independentDeployment("V1Subcontract"),
   // independentDeployment("V2Subcontract"),
   // {
@@ -73,6 +73,7 @@ const deployments: DeploymentBuilder[] = [
   //   [{ name: "Peanut Butter", quantity: 1000 }]
   // ),
   // independentDeployment("CoinFlip"),
+  // independentDeployment("DemoContract", "Ledger Works Demo Contract", "LWORKS", "1"),
 ];
 
 async function main() {
