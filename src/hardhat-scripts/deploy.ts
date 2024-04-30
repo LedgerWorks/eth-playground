@@ -73,6 +73,7 @@ const deployments: DeploymentBuilder[] = [
   //   [{ name: "Peanut Butter", quantity: 1000 }]
   // ),
   // independentDeployment("CoinFlip"),
+  // independentDeployment("DemoContract", "Ledger Works Demo Contract", "LWORKS", "1"),
 ];
 
 async function main() {
