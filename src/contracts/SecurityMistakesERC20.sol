@@ -59,6 +59,10 @@ contract SecurityMistakesERC20 {
     return true;
   }
 
+  /**
+   * A 'transferFrom' variant that allows exploiting as the 'allowance' isn't checked.
+   * E.g. I can transfer from accounts I haven't been approved to transfer from
+   */
   function exploitableTransferFrom(
     address owner,
     address buyer,
