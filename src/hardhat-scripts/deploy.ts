@@ -80,11 +80,15 @@ const deployments: DeploymentBuilder[] = [
   //   [{ name: "Peanut Butter", quantity: 1000 }]
   // ),
   // independentDeployment("CoinFlip"),
+<<<<<<< HEAD
   independentDeployment("HelloWorldV1"),
   {
     name: "HelloWorldProxyDeployer",
     constructorArgBuilder: (previousDeployments) => [previousDeployments.HelloWorldV1.address],
   },
+=======
+  // independentDeployment("DemoContract", "Ledger Works Demo Contract", "LWORKS", "1"),
+>>>>>>> 8ba8ac0e532311d57e28d6a5e3ccaea0d6c03097
 ];
 
 async function main() {
