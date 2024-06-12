@@ -25,12 +25,13 @@ async function deploy(
   const contract = await ethers.getContractFactory(deploymentBuilder.name);
   const constructorArgs = deploymentBuilder.constructorArgBuilder(previousDeployments);
   const deployment = await contract.deploy(...constructorArgs);
-  await deployment.deployed();
+  await deployment.waitForDeployment();
   const argsString = constructorArgs.length ? `Constructor args: ${constructorArgs}, ` : "";
+  const deploymentAddress = await deployment.getAddress();
   console.info(
-    `Deployed ${deploymentBuilder.name} to the ${network.name} network. ${argsString}Address: ${deployment.address}`
+    `Deployed ${deploymentBuilder.name} to the ${network.name} network. ${argsString}Address: ${deploymentAddress}`
   );
-  return { name: deploymentBuilder.name, address: deployment.address };
+  return { name: deploymentBuilder.name, address: deploymentAddress };
 }
 
 function independentDeployment(name: string, ...constructorArgs: unknown[]): DeploymentBuilder {
@@ -80,15 +81,12 @@ const deployments: DeploymentBuilder[] = [
   //   [{ name: "Peanut Butter", quantity: 1000 }]
   // ),
   // independentDeployment("CoinFlip"),
-<<<<<<< HEAD
   independentDeployment("HelloWorldV1"),
   {
     name: "HelloWorldProxyDeployer",
     constructorArgBuilder: (previousDeployments) => [previousDeployments.HelloWorldV1.address],
   },
-=======
   // independentDeployment("DemoContract", "Ledger Works Demo Contract", "LWORKS", "1"),
->>>>>>> 8ba8ac0e532311d57e28d6a5e3ccaea0d6c03097
 ];
 
 async function main() {
