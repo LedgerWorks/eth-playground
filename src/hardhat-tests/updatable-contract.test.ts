@@ -11,9 +11,9 @@ describe("UpdatableContract", () => {
     const V2Subcontract = await ethers.getContractFactory("V2Subcontract");
     const v2Subcontract = await V2Subcontract.deploy();
     const UpdatableContract = await ethers.getContractFactory("UpdatableContract");
-    const updatableContract = await UpdatableContract.deploy(v1Subcontract.address);
+    const updatableContract = await UpdatableContract.deploy(v1Subcontract);
     // Need to attach to one of the sub-contract definition to appease Typescript type definitions
-    const contractProxy = V1Subcontract.attach(updatableContract.address);
+    const contractProxy = V1Subcontract.attach(updatableContract);
 
     return {
       updatableContract,
@@ -41,7 +41,7 @@ describe("UpdatableContract", () => {
       await contractProxy.increment();
       const startCount = await contractProxy.getCount();
       expect(startCount).to.equal(1);
-      await updatableContract.updateContract(v2Subcontract.address);
+      await updatableContract.updateContract(v2Subcontract);
       await contractProxy.increment();
       const endCount = await contractProxy.getCount();
       expect(endCount).to.equal(3);

@@ -7,7 +7,7 @@ describe("DemoContract", () => {
   async function deployDemoContract() {
     const [owner, otherAccount] = await ethers.getSigners();
 
-    const DemoContract = ethers.getContractFactory("DemoContract");
+    const DemoContract = await ethers.getContractFactory("DemoContract");
     const name = "Ledger Works Demo Contract";
     const symbol = "LWORKS";
     const version = "1";

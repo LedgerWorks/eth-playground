@@ -1,7 +1,6 @@
 import "@nomicfoundation/hardhat-chai-matchers";
 import { loadFixture } from "@nomicfoundation/hardhat-network-helpers";
 import { expect } from "chai";
-import { BigNumber } from "ethers";
 import { ethers } from "hardhat";
 
 describe("WadRay", () => {
@@ -17,28 +16,28 @@ describe("WadRay", () => {
 
   const smallNumberCases = [
     {
-      a: BigNumber.from("10"),
-      b: BigNumber.from("11"),
+      a: 10,
+      b: 11,
       product: 110,
       quotient: 0.9090909090909091,
       wadProduct: 0,
-      wadQuotient: BigNumber.from("909090909090909091"),
+      wadQuotient: BigInt("909090909090909091"),
     },
     {
       a: 1000,
       b: 500,
       product: 500000,
       quotient: 2,
-      wadProduct: BigNumber.from("0"),
-      wadQuotient: BigNumber.from("2000000000000000000"),
+      wadProduct: BigInt("0"),
+      wadQuotient: BigInt("2000000000000000000"),
     },
   ];
   const largeNumberCases = [
     {
-      a: BigNumber.from("10000000000000000000"), // 10E18
-      b: BigNumber.from("11000000000000000000"), // 11E18
-      wadProduct: BigNumber.from("110000000000000000000"), // 110E18
-      wadQuotient: BigNumber.from("909090909090909091"), // 110E18
+      a: BigInt("10000000000000000000"), // 10E18
+      b: BigInt("11000000000000000000"), // 11E18
+      wadProduct: BigInt("110000000000000000000"), // 110E18
+      wadQuotient: BigInt("909090909090909091"), // 110E18
     },
   ];
 
@@ -49,8 +48,8 @@ describe("WadRay", () => {
         const { contract } = await loadFixture(deployWadRayMath);
 
         const result = await contract.multiply(a, b);
-        expect(a * b).to.equal(product);
-        expect(result.toNumber()).to.equal(wadProduct);
+        expect(BigInt(a) * BigInt(b)).to.equal(product);
+        expect(result).to.equal(wadProduct);
       });
     });
 

@@ -43,11 +43,18 @@ function independentDeployment(name: string, ...constructorArgs: unknown[]): Dep
 const deployments: DeploymentBuilder[] = [
   // independentDeployment("TransferFundsViaContract"),
   // independentDeployment("PointlessCurrencyERC20", 1000000),
+  // {
+  //   name: "TransferDelegate",
+  //   constructorArgBuilder: (previousDeployments) => [
+  //     2000000,
+  //     previousDeployments.PointlessCurrencyERC20.address,
+  //   ],
+  // },
   // independentDeployment("RWATransfer", 1000000),
   // independentDeployment("SubclassedERC20", "CoryBucks", "CRYBKS", 5000),
   // independentDeployment("SubclassedERC20", "Chubbleduckets", "CHBLZ", 5000),
   // independentDeployment("Swap"),
-  independentDeployment("SecurityMistakesERC20", 1000000),
+  // independentDeployment("SecurityMistakesERC20", 1000000),
   // independentDeployment("SecurityExploiter"),
   // independentDeployment("TinyContract"),
   // independentDeployment("V1Subcontract"),
@@ -73,6 +80,11 @@ const deployments: DeploymentBuilder[] = [
   //   [{ name: "Peanut Butter", quantity: 1000 }]
   // ),
   // independentDeployment("CoinFlip"),
+  independentDeployment("HelloWorldV1"),
+  {
+    name: "HelloWorldProxyDeployer",
+    constructorArgBuilder: (previousDeployments) => [previousDeployments.HelloWorldV1.address],
+  },
 ];
 
 async function main() {

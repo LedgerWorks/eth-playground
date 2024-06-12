@@ -4,8 +4,8 @@ import { expect } from "chai";
 import { ethers } from "hardhat";
 
 describe("CoinFlip", () => {
-  const initialDeposit = ethers.utils.parseEther("5");
-  const wagerAmount = ethers.utils.parseEther("0.05");
+  const initialDeposit = ethers.parseEther("5");
+  const wagerAmount = ethers.parseEther("0.05");
   const headsTimestamp = 1683038967952;
   const tailsTimestamp = 1683038967953;
 
@@ -15,7 +15,7 @@ describe("CoinFlip", () => {
     const contract = await CoinFlipFactory.deploy();
 
     await contract.banPlayer(bannedPlayer.address);
-    const tx = await owner.sendTransaction({ to: contract.address, value: initialDeposit });
+    const tx = await owner.sendTransaction({ to: contract.getAddress(), value: initialDeposit });
     await tx.wait();
 
     return { contract, owner, player, bannedPlayer };
@@ -33,9 +33,9 @@ describe("CoinFlip", () => {
     describe("withdraw", () => {
       it("should transfer amount from contract to owner", async () => {
         const { contract, owner } = await loadFixture(deployCoinFlip);
-        const preWithdrawBalance = await owner.getBalance();
+        const preWithdrawBalance = await ethers.provider.getBalance(owner);
         await contract.withdraw(initialDeposit);
-        const postWithdrawBalance = await owner.getBalance();
+        const postWithdrawBalance = await ethers.provider.getBalance(owner);
         expect(postWithdrawBalance).to.not.equal(preWithdrawBalance);
       });
 
@@ -50,12 +50,12 @@ describe("CoinFlip", () => {
     describe("withdrawAll", () => {
       it("should transfer entire balance from contract to owner", async () => {
         const { contract, owner } = await loadFixture(deployCoinFlip);
-        const preWithdrawOwnerBalance = await owner.getBalance();
+        const preWithdrawOwnerBalance = await ethers.provider.getBalance(owner);
         await contract.withdrawAll();
-        const postWithdrawOwnerBalance = await owner.getBalance();
+        const postWithdrawOwnerBalance = await ethers.provider.getBalance(owner);
         const contractBalance = await contract.getBalance();
         expect(postWithdrawOwnerBalance).to.not.equal(preWithdrawOwnerBalance);
-        expect(contractBalance).to.equal(ethers.utils.parseEther("0"));
+        expect(contractBalance).to.equal(ethers.parseEther("0"));
       });
 
       it("should revert if called by a non-admin", async () => {
@@ -131,7 +131,7 @@ describe("CoinFlip", () => {
         const before = await contract.getCurrentFlipIndex(player.address);
         await contract.incrementCurrentFlip(player.address);
         const after = await contract.getCurrentFlipIndex(player.address);
-        expect(after).to.equal(before.add(1));
+        expect(after).to.equal(before + 1n);
       });
 
       it("should revert if called by a non-admin", async () => {
@@ -188,7 +188,7 @@ describe("CoinFlip", () => {
 
       it("should revert if wager amount is too low", async () => {
         const { contract, player } = await loadFixture(deployCoinFlip);
-        const notEnoughEther = ethers.utils.parseEther("0.005");
+        const notEnoughEther = ethers.parseEther("0.005");
         await expect(
           contract.connect(player).wager(1, { value: notEnoughEther })
         ).to.be.revertedWith("Wager amount too small.");
@@ -196,7 +196,7 @@ describe("CoinFlip", () => {
 
       it("should revert if wager amount is too high", async () => {
         const { contract, player } = await loadFixture(deployCoinFlip);
-        const tooMuchEther = ethers.utils.parseEther("1.05");
+        const tooMuchEther = ethers.parseEther("1.05");
         await expect(contract.connect(player).wager(1, { value: tooMuchEther })).to.be.revertedWith(
           "Wager amount too large."
         );
@@ -220,7 +220,7 @@ describe("CoinFlip", () => {
         const { contract, player } = await loadFixture(deployCoinFlip);
         await contract.connect(player).wager(1, { value: wagerAmount });
         const currentFlip = await contract.getCurrentFlip(player.address);
-        const expectedFlipFee = wagerAmount.mul(350).div(10_000);
+        const expectedFlipFee = (wagerAmount * 350n) / 10_000n;
         expect(currentFlip.flipFee).to.equal(expectedFlipFee);
       });
 
@@ -233,18 +233,18 @@ describe("CoinFlip", () => {
 
       it("should withdraw the transferred amount from the player", async () => {
         const { contract, player } = await loadFixture(deployCoinFlip);
-        const preTransferBalance = await player.getBalance();
+        const preTransferBalance = await ethers.provider.getBalance(player);
         await contract.connect(player).wager(1, { value: wagerAmount });
-        const postTransferBalance = await player.getBalance();
+        const postTransferBalance = await ethers.provider.getBalance(player);
         expect(postTransferBalance).to.not.equal(preTransferBalance);
       });
 
       it("should deposit the transferred amount into the contract", async () => {
         const { contract, player } = await loadFixture(deployCoinFlip);
-        const preTransferBalance = await contract.provider.getBalance(contract.address);
+        const preTransferBalance = await ethers.provider.getBalance(contract);
         await contract.connect(player).wager(1, { value: wagerAmount });
-        const postTransferBalance = await contract.provider.getBalance(contract.address);
-        expect(postTransferBalance).to.equal(preTransferBalance.add(wagerAmount));
+        const postTransferBalance = await ethers.provider.getBalance(contract);
+        expect(postTransferBalance).to.equal(preTransferBalance + wagerAmount);
       });
     });
 
@@ -330,13 +330,13 @@ describe("CoinFlip", () => {
         const { contract, player } = await loadFixture(deployCoinFlip);
         await contract.connect(player).wager(1, { value: wagerAmount });
         await contract.connect(player).flip(headsTimestamp);
-        const prePayoutBalance = await player.getBalance();
+        const prePayoutBalance = await ethers.provider.getBalance(player);
         const tx = await contract.connect(player).collect();
         const receipt = await tx.wait();
-        const postPayoutBalance = await player.getBalance();
-        const gasSpent = receipt.gasUsed.mul(receipt.effectiveGasPrice);
-        const fee = wagerAmount.mul(350).div(10_000);
-        const expectedBalance = prePayoutBalance.add(wagerAmount.mul(2)).sub(fee).sub(gasSpent);
+        const postPayoutBalance = await ethers.provider.getBalance(player);
+        const gasSpent = (receipt?.gasUsed ?? 0n) * (receipt?.gasPrice ?? 0n);
+        const fee = (wagerAmount * 350n) / 10_000n;
+        const expectedBalance = prePayoutBalance + wagerAmount * 2n - fee - gasSpent;
         expect(postPayoutBalance).to.equal(expectedBalance);
       });
 
@@ -357,7 +357,7 @@ describe("CoinFlip", () => {
         const before = await contract.getCurrentFlipIndex(player.address);
         await contract.connect(player).collect();
         const after = await contract.getCurrentFlipIndex(player.address);
-        expect(after).to.equal(before.add(1));
+        expect(after).to.equal(before + 1n);
       });
     });
   });

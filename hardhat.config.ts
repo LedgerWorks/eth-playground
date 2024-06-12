@@ -1,5 +1,6 @@
 import { HardhatUserConfig } from "hardhat/config";
 import "@nomicfoundation/hardhat-toolbox";
+import "@openzeppelin/hardhat-upgrades";
 import dotenv from "dotenv";
 
 dotenv.config();
@@ -18,7 +19,7 @@ function getPrivateKey(): string {
 
 const config: HardhatUserConfig = {
   solidity: {
-    compilers: [{ version: "0.7.6" }, { version: "0.8.17" }],
+    compilers: [{ version: "0.7.6" }, { version: "0.8.17" }, { version: "0.8.20" }],
   },
   paths: {
     sources: "./src/contracts",

@@ -20,7 +20,7 @@ describe("PointlessCurrencyERC20", () => {
       const { contract, initialSupply, owner } = await loadFixture(deployPointlessCurrency);
 
       const ownerBalance = await contract.balanceOf(owner.address);
-      expect(ownerBalance.toNumber()).to.equal(initialSupply);
+      expect(ownerBalance).to.equal(initialSupply);
     });
   });
 
@@ -40,9 +40,9 @@ describe("PointlessCurrencyERC20", () => {
 
       await contract.transfer(otherAccount.address, 10);
       const updatedOwnerBalance = await contract.balanceOf(owner.address);
-      expect(updatedOwnerBalance.toNumber()).to.equal(initialSupply - 10);
+      expect(updatedOwnerBalance).to.equal(initialSupply - 10);
       const otherAccountBalance = await contract.balanceOf(otherAccount.address);
-      expect(otherAccountBalance.toNumber()).to.equal(10);
+      expect(otherAccountBalance).to.equal(10);
     });
   });
 });

@@ -41,7 +41,7 @@ describe("TupleContract", () => {
       // second parameter passed to constructor
       expect(itemCount).to.equal(1);
       expect(firstItem[0]).to.equal(items[0].name);
-      expect(firstItem[1].toNumber()).to.equal(items[0].quantity);
+      expect(firstItem[1]).to.equal(items[0].quantity);
       expect(name).to.equal(storeName);
     });
 
@@ -59,11 +59,11 @@ describe("TupleContract", () => {
 
       const firstItem = await contract._items(0);
       const firstItemName = firstItem[0];
-      const firstItemQuantity = firstItem[1].toNumber();
+      const firstItemQuantity = firstItem[1];
 
       const secondItem = await contract._items(1);
       const secondItemName = secondItem[0];
-      const secondItemQuantity = secondItem[1].toNumber();
+      const secondItemQuantity = secondItem[1];
 
       const itemCount = await contract._itemCount();
       const name = await contract._name();
