@@ -83,7 +83,7 @@ const deployments: DeploymentBuilder[] = [
   // independentDeployment("CoinFlip"),
   independentDeployment("HelloWorldV1"),
   {
-    name: "HelloWorldProxyDeployer",
+    name: "HelloWorldProxy",
     constructorArgBuilder: (previousDeployments) => [previousDeployments.HelloWorldV1.address],
   },
   // independentDeployment("DemoContract", "Ledger Works Demo Contract", "LWORKS", "1"),
