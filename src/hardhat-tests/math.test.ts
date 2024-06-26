@@ -28,5 +28,21 @@ describe("Math tests", () => {
         expect(result).to.equal(expected);
       });
     });
+
+    [
+      { num: 2, shift: 0, expected: 2 },
+      { num: 2, shift: 1, expected: 4 },
+      { num: 4, shift: 1, expected: 8 },
+      { num: 5, shift: 2, expected: 20 },
+      { num: 5, shift: 128, expected: BigInt("1701411834604692317316873037158841057280") },
+    ].forEach(({ num, shift, expected }) => {
+      it(`should return <num> * 2**<shift>: num=${num}, shift=${shift}`, async () => {
+        const { contract } = await loadFixture(deployMathTester);
+
+        const result = await contract.shiftLeft(num, shift);
+
+        expect(result).to.equal(expected);
+      });
+    });
   });
 });
