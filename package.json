@@ -17,6 +17,7 @@
   "license": "ISC",
   "dependencies": {
     "@openzeppelin/contracts": "^5.0.2",
+    "@redstone-finance/evm-connector": "^0.5.4",
     "@types/typescript": "^2.0.0",
     "@uniswap/v3-core": "^1.0.1",
     "@uniswap/v3-periphery": "^1.4.3",
