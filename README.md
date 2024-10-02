@@ -8,7 +8,7 @@ Create a .env file at the root. See [.env-example](.env-example).
 
 ## Testing Contracts Locally
 
-We use Hardhat to run tests locally against contracts. In order to run these tests,
+We use Hardhat to run test smart contracts. In order to run these tests,
 take the following steps:
 
 1. Ensure you have all dependencies installed: `npm install`
