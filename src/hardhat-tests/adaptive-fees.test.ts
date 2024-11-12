@@ -3,6 +3,11 @@ import { expect } from "chai";
 import { loadFixture } from "@nomicfoundation/hardhat-network-helpers";
 import { ethers } from "hardhat";
 
+import { writeFile } from "fs/promises";
+import { product as arrayProduct } from "cartesian-product-generator";
+import { ethJsonReplacer } from "./eth-json";
+import { range } from "./range";
+
 describe("AdaptiveFee", () => {
   async function deployAdaptiveFees() {
     const [owner] = await ethers.getSigners();
